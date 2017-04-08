@@ -235,6 +235,7 @@ $(document).ready(function() {
     $("#new-game-button").click(function() {
         // start the game and re-render
         startGame();
+        console.log("Game started!");
         render();
     });
 
