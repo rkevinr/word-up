@@ -51,9 +51,12 @@ function endGame() {
  */
 function addNewWordSubmission(word) {
     // Do we already have a wordSubmission with this word?
-    // TODO 21
+    // TD 21
     // replace the hardcoded 'false' with the real answer
-    var alreadyUsed = false;
+    var alreadyUsed = model.wordSubmissions.reduce(
+                        function(acc, val) {
+                            return acc || (val.word === word);
+                        }, false);
 
     // if the word is valid and hasn't already been used, add it
     if (containsOnlyAllowedLetters(word) && alreadyUsed == false) {
@@ -70,11 +73,12 @@ function addNewWordSubmission(word) {
  * the corresponding wordSubmission in the model, and then re-renders.
  */
 function checkIfWordIsReal(word) {
+    var URL = "http://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word;
 
     // make an AJAX call to the Pearson API
     $.ajax({
         // TODO 13 what should the url be?
-        url: "www.todo13.com",
+        url:  URL,
         success: function(response) {
             console.log("We received a response from Pearson!");
 
@@ -244,9 +248,10 @@ $(document).ready(function() {
     // Add another event handler with a callback function.
     // When the textbox content changes,
     // update the .currentAttempt property of the model and re-render
-    $("textbox").change(function() {
-        model.currentAttempt = $("textbox").val();
-        console.log("currentAttempt = " + model.currentAttempt);
+    $("#textbox").keyup(function() {  // .keypress DOESN'T achieve correct effect
+        model.currentAttempt = $("#textbox").val();
+        // console.log("[keyEvent] currentAtempt = " + model.currentAttempt);
+        render();
     });
 
 
@@ -257,6 +262,7 @@ $(document).ready(function() {
 
         // add a new word from whatever they typed
         addNewWordSubmission(model.currentAttempt);
+        console.log("[submit] currentAttempt = " + model.currentAttempt);
 
         // clear away whatever they typed
         model.currentAttempt = "";
