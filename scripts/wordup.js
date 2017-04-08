@@ -85,15 +85,15 @@ function checkIfWordIsReal(word) {
             // let's print the response to the console so we can take a looksie
             // console.log(response);
 
-            // TODO 14
+            // TD 14
             // Replace the 'true' below.
             // If the response contains any results, then the word is legitimate.
             // Otherwise, it is not.
             var validResultsReturned = response.results.length > 0;
             console.log("is word valid?" + validResultsReturned);
 
-            // TODO 15
-            // Update the corresponding wordSubmission in the model
+            // TD 15
+            // Remove corresponding, invalid wordSubmission from model
             if (!validResultsReturned) {
                 model.wordSubmissions.pop();
             }
@@ -247,13 +247,13 @@ $(document).ready(function() {
         render();
     });
 
-    // TODO 6
+    // TD 6
     // Add another event handler with a callback function.
     // When the textbox content changes,
     // update the .currentAttempt property of the model and re-render
     $("#textbox").keyup(function() {  // .keypress DOESN'T achieve correct effect
+        // FIXME:  getting occasional glitches with this event approach
         model.currentAttempt = $("#textbox").val();
-        // console.log("[keyEvent] currentAtempt = " + model.currentAttempt);
         render();
     });
 
@@ -269,6 +269,7 @@ $(document).ready(function() {
 
         // clear away whatever they typed
         model.currentAttempt = "";
+        $("#textbox").removeClass("bad-attempt"); // start next attempt "clean"
 
         // re-render
         render();
@@ -292,10 +293,12 @@ var scrabblePointsForEachLetter = {
  * meaning it is not a member of the .allowedLetters list from the current model
  */
 function isDisallowedLetter(letter) {
-    // TODO 7
+    // TD 7
     // This should return true if the letter is not an element of
     // the .allowedLetters list in the model
-    return false;
+    var isDisallowed = model.allowedLetters.indexOf(letter) === -1;
+    // console.log("letter " + letter + " allowed?  " + !isDisallowed);
+    return isDisallowed;
 }
 
 /**
@@ -312,9 +315,9 @@ function disallowedLettersInWord(word) {
  * i.e. the word does not contain any disallowed letters
  */
 function containsOnlyAllowedLetters(word) {
-    // TODO 12
-    // Return the actual answer.
-    return true;
+    // TD 12 -- Return the actual answer.
+    // console.log("containsOnlyAllowedLetters() called");
+    return disallowedLettersInWord(word).length == 0;
 }
 
 /**
