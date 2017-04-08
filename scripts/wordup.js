@@ -145,8 +145,9 @@ function render() {
 
     // Set the value of the textbox
     $("#textbox").val(model.currentAttempt);
-    // TODO 3
+    // TD 3
     // Give focus to the textbox.
+    $("#textbox").focus();
 
 
     // if the current word attempt contains disallowed letters,
@@ -243,6 +244,10 @@ $(document).ready(function() {
     // Add another event handler with a callback function.
     // When the textbox content changes,
     // update the .currentAttempt property of the model and re-render
+    $("textbox").change(function() {
+        model.currentAttempt = $("textbox").val();
+        console.log("currentAttempt = " + model.currentAttempt);
+    });
 
 
     // when the form is submitted
