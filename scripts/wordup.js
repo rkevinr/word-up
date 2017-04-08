@@ -244,6 +244,8 @@ $(document).ready(function() {
         // start the game and re-render
         startGame();
         console.log("Game started!");
+        $("#textbox").prop("disabled", false);
+        $("#textbox").focusout();
         render();
     });
 
@@ -254,6 +256,10 @@ $(document).ready(function() {
     $("#textbox").keyup(function() {  // .keypress DOESN'T achieve correct effect
         // FIXME:  getting occasional glitches with this event approach
         model.currentAttempt = $("#textbox").val();
+        if (model.currentAttempt.length === 0) {
+            // start next attempt "clean" (if user has DEL'd/BKSPC'd to 0 chars)
+            $("#textbox").removeClass("bad-attempt");
+        }
         render();
     });
 
@@ -419,6 +425,8 @@ function startTimer() {
             var stillTimeLeft = model.gameHasStarted && model.secondsRemaining > 0
             if (stillTimeLeft) {
                 model.timer = tick();
+            } else {
+                $("#textbox").prop("disabled", true);
             }
         }, 1000);
     }
