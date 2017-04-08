@@ -73,27 +73,30 @@ function addNewWordSubmission(word) {
  * the corresponding wordSubmission in the model, and then re-renders.
  */
 function checkIfWordIsReal(word) {
-    var URL = "http://api.pearson.com/v2/dictionaries/lasde/entries?headword=" + word;
+    var URL_BASE = "http://api.pearson.com/v2/dictionaries/lasde/entries?headword=";
 
     // make an AJAX call to the Pearson API
     $.ajax({
-        // TODO 13 what should the url be?
-        url:  URL,
+        // TD 13 what should the url be?
+        url:  URL_BASE + word,
         success: function(response) {
-            console.log("We received a response from Pearson!");
+            // console.log("We received a response from Pearson!");
 
             // let's print the response to the console so we can take a looksie
-            console.log(response);
+            // console.log(response);
 
             // TODO 14
             // Replace the 'true' below.
             // If the response contains any results, then the word is legitimate.
             // Otherwise, it is not.
-            var theAnswer = true;
+            var validResultsReturned = response.results.length > 0;
+            console.log("is word valid?" + validResultsReturned);
 
             // TODO 15
             // Update the corresponding wordSubmission in the model
-
+            if (!validResultsReturned) {
+                model.wordSubmissions.pop();
+            }
 
             // re-render
             render();
