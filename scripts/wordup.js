@@ -265,8 +265,7 @@ $(document).ready(function() {
     // Add another event handler with a callback function.
     // When the textbox content changes,
     // update the .currentAttempt property of the model and re-render
-    $("#textbox").keyup(function() {  // .keypress DOESN'T achieve correct effect
-        // FIXME:  getting occasional glitches with this event approach
+    $("#textbox").on("input", function() {  // as specified by LC assignment
         model.currentAttempt = $("#textbox").val();
         // start next attempt "clean", if user has DEL'd/BKSPC'd, and 
         //   either no (zero) chars, or only valid chars, remain in textbox
