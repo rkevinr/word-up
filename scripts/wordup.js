@@ -174,9 +174,10 @@ function render() {
     // if the game is over
     var gameOver = model.secondsRemaining <= 0
     if (gameOver) {
-        // TODO 9
+        // TD 9
         // disable the text box and clear its contents
-
+        $("#textbox").prop("disabled", true);
+        $("#textbox").val("");
     }
 }
 
@@ -245,7 +246,7 @@ $(document).ready(function() {
         startGame();
         console.log("Game started!");
         $("#textbox").prop("disabled", false);
-        $("#textbox").focusout();
+        $("#textbox").focus();
         render();
     });
 
@@ -425,8 +426,6 @@ function startTimer() {
             var stillTimeLeft = model.gameHasStarted && model.secondsRemaining > 0
             if (stillTimeLeft) {
                 model.timer = tick();
-            } else {
-                $("#textbox").prop("disabled", true);
             }
         }, 1000);
     }
