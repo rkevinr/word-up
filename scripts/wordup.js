@@ -182,9 +182,10 @@ function render() {
     var gameOver = model.secondsRemaining <= 0
     if (gameOver) {
         // TD 9
-        // disable the text box and clear its contents
+        // disable the text box and clear its contents (and "bad" letters below)
         $("#textbox").prop("disabled", true);
         $("#textbox").val("");
+        $("#bad_letters").empty();
     }
 }
 
