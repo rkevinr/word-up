@@ -93,10 +93,16 @@ function checkIfWordIsReal(word) {
             console.log("is word valid?" + validResultsReturned);
 
             // TD 15
-            // Remove corresponding, invalid wordSubmission from model
-            if (!validResultsReturned) {
+            if (validResultsReturned) {
+                var currElemIndex = model.wordSubmissions.length-1
+                model.wordSubmissions[currElemIndex].isRealWord = true;
+            } else {
+                // Remove corresponding, invalid wordSubmission from model
                 model.wordSubmissions.pop();
             }
+
+            console.log("total # of valid wordSubmissions, as of now: " +
+                model.wordSubmissions.length);
 
             // re-render
             render();
@@ -215,12 +221,15 @@ function wordSubmissionChip(wordSubmission) {
         var scoreChip = $("<span></span>").text("⟐");
         // TODO 17
         // give the scoreChip appropriate text content
+        scoreChip.text(wordScore(wordSubmission.word)); 
 
         // TODO 18
         // give the scoreChip appropriate css classes
+        scoreChip.attr("class", "tag tag-primary tag-sm");
 
         // TODO 16
         // append scoreChip into wordChip
+        wordChip.append(scoreChip);
 
     }
 
@@ -356,8 +365,9 @@ function wordScore(word) {
     // TODO 19
     // Replace the empty list below.
     // Map the list of letters into a list of scores, one for each letter.
-    var letterScores = [];
+    var letterScores = letters.map(letterScore);
 
+    console.log("word score:  " + letterScores.reduce(add, 0));
     // return the total sum of the letter scores
     return letterScores.reduce(add, 0);
 }
@@ -371,6 +381,7 @@ function currentScore() {
     // a list of scores, one for each word submission
     var wordScores = model.wordSubmissions.map(function(submission) {
         if (submission.isRealWord) {
+            console.log("calling wordScore()...");
             return wordScore(submission.word);
         }
         else {
