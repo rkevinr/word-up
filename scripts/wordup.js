@@ -165,10 +165,10 @@ function render() {
 
         // show the disallowed letters underneath
         var redLetterChips = disallowedLetters.map(disallowedLetterChip);
+        // console.log("redLetterChips is of type:  " + typeof(redLetterChips));
 
-        // TODO 8
-        // append the red letter chips to the form
-
+        // TD 8 attach curr. set of the red letter chips to the form
+        $("#bad_letters").html(redLetterChips);
     }
 
     // if the game is over
