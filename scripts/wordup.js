@@ -172,7 +172,6 @@ function render() {
 
         // show the disallowed letters underneath
         var redLetterChips = disallowedLetters.map(disallowedLetterChip);
-        // console.log("redLetterChips is of type:  " + typeof(redLetterChips));
 
         // TD 8 attach curr. set of the red letter chips to the form
         $("#bad_letters").html(redLetterChips);
@@ -329,7 +328,17 @@ function isDisallowedLetter(letter) {
  */
 function disallowedLettersInWord(word) {
     letters = word.split("");
-    return letters.filter(isDisallowedLetter);
+    // FIXME: this approach trades FP simplicity for long execution time
+    //   ref: http://jszen.com/
+    //          best-way-to-get-unique-values-of-an-array-in-javascript.7.html
+    return letters.filter(isDisallowedLetter)
+                  .reduce(
+                    function(currArray, letter) {
+                        if (currArray.indexOf(letter) < 0) {
+                            currArray.push(letter);
+                        }
+                        return currArray;
+                    }, []);
 }
 
 /**
