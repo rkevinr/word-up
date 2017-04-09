@@ -282,9 +282,12 @@ $(document).ready(function() {
         // we don't want the page to refresh
         evt.preventDefault();
 
-        // add a new word from whatever they typed
-        addNewWordSubmission(model.currentAttempt);
-        // console.log("[submit] currentAttempt = " + model.currentAttempt);
+        if (containsOnlyAllowedLetters($("#textbox").val())) {
+            // add a new word from whatever they typed
+            addNewWordSubmission(model.currentAttempt);
+        } else {
+            $("#textbox").empty();
+        }
 
         // clear away whatever they typed
         model.currentAttempt = "";
