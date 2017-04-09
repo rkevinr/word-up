@@ -137,18 +137,19 @@ function render() {
     $("#word-submissions").empty();
     // TODO 10
     // Add a few things to the above code block (underneath "// clear stuff").
-
+    $("#bad_letters").empty();
 
     // reveal the #game container
     $("#game").show();
 
     // render the letter tiles
-    var letterChips = model.allowedLetters.map(letterChip)
+    var letterChips = model.allowedLetters.map(letterChip);
     $("#allowed-letters").append(letterChips);
 
     // TODO 11
     // Render the word submissions
-
+    var wordChips = model.wordSubmissions.map(wordSubmissionChip);
+    $("#word-submissions").append(wordChips);
 
     // Set the value of the textbox
     $("#textbox").val(model.currentAttempt);
