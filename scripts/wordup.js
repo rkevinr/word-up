@@ -102,7 +102,7 @@ function checkIfWordIsReal(word) {
             }
 
             // console.log("total # of valid wordSubmissions, as of now: " +
-                model.wordSubmissions.length);
+            //     model.wordSubmissions.length);
 
             // re-render
             render();
