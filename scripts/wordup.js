@@ -267,8 +267,10 @@ $(document).ready(function() {
     $("#textbox").keyup(function() {  // .keypress DOESN'T achieve correct effect
         // FIXME:  getting occasional glitches with this event approach
         model.currentAttempt = $("#textbox").val();
-        if (model.currentAttempt.length === 0) {
-            // start next attempt "clean" (if user has DEL'd/BKSPC'd to 0 chars)
+        // start next attempt "clean", if user has DEL'd/BKSPC'd, and 
+        //   either no (zero) chars, or only valid chars, remain in textbox
+        if (model.currentAttempt.length === 0 ||
+                containsOnlyAllowedLetters($("#textbox").val())) {
             $("#textbox").removeClass("bad-attempt");
         }
         render();
