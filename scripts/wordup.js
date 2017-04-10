@@ -82,27 +82,19 @@ function checkIfWordIsReal(word) {
         success: function(response) {
             // console.log("We received a response from Pearson!");
 
-            // let's print the response to the console so we can take a looksie
-            // console.log(response);
-
             // TD 14
             // Replace the 'true' below.
             // If the response contains any results, then the word is legitimate.
             // Otherwise, it is not.
             var validResultsReturned = response.results.length > 0;
-            // console.log("is word valid?" + validResultsReturned);
 
             // TD 15
+            var currElemIndex = model.wordSubmissions.length-1
             if (validResultsReturned) {
-                var currElemIndex = model.wordSubmissions.length-1
                 model.wordSubmissions[currElemIndex].isRealWord = true;
             } else {
-                // Remove corresponding, invalid wordSubmission from model
-                model.wordSubmissions.pop();
+                model.wordSubmissions[currElemIndex].isRealWord = false;
             }
-
-            // console.log("total # of valid wordSubmissions, as of now: " +
-            //     model.wordSubmissions.length);
 
             // re-render
             render();
@@ -153,7 +145,7 @@ function render() {
     $("#allowed-letters").append(letterChips);
 
     // TD 11
-    // Render the valid word submissions
+    // Render the valid (AND invalid) word submissions
     var wordChips = model.wordSubmissions.map(wordSubmissionChip);
     $("#word-submissions").append(wordChips);
 
@@ -219,18 +211,24 @@ function wordSubmissionChip(wordSubmission) {
     // if we know the status of this word (real word or not), then add a green score or red X
     if (wordSubmission.hasOwnProperty("isRealWord")) {
         var scoreChip = $("<span></span>").text("⟐");
+        var tag_styles = "tag tag-sm tag-primary";
+
         // TD 17
         // give the scoreChip appropriate text content
-        scoreChip.text(wordScore(wordSubmission.word)); 
+        if (wordSubmission.isRealWord) {
+            scoreChip.text(wordScore(wordSubmission.word));
+        } else {
+            scoreChip.text("x");
+            tag_styles = "tag tag-sm tag-danger";
+        }
 
         // TD 18
         // give the scoreChip appropriate css classes
-        scoreChip.attr("class", "tag tag-primary tag-sm");
+        scoreChip.attr("class", tag_styles);
 
         // TD 16
         // append scoreChip into wordChip
         wordChip.append(scoreChip);
-
     }
 
     return wordChip;
@@ -254,7 +252,6 @@ $(document).ready(function() {
     $("#new-game-button").click(function() {
         // start the game and re-render
         startGame();
-        // console.log("Game started!");
         $("#textbox").prop("disabled", false);
         $("#textbox").focus();
         render();
@@ -318,7 +315,6 @@ function isDisallowedLetter(letter) {
     // This should return true if the letter is not an element of
     // the .allowedLetters list in the model
     var isDisallowed = model.allowedLetters.indexOf(letter) === -1;
-    // console.log("letter " + letter + " allowed?  " + !isDisallowed);
     return isDisallowed;
 }
 
@@ -347,7 +343,6 @@ function disallowedLettersInWord(word) {
  */
 function containsOnlyAllowedLetters(word) {
     // TD 12 -- Return the actual answer.
-    // console.log("containsOnlyAllowedLetters() called");
     return disallowedLettersInWord(word).length == 0;
 }
 
@@ -373,17 +368,20 @@ function letterScore(letter) {
  * Returns a score of 0 if the word contains any disallowed letters.
  */
 function wordScore(word) {
-    // split the word into a list of letters
-    var letters = word.split("");
-
-    // TD 19
-    // Replace the empty list below.
-    // Map the list of letters into a list of scores, one for each letter.
-    var letterScores = letters.map(letterScore);
-
-    // console.log("word score:  " + letterScores.reduce(add, 0));
-    // return the total sum of the letter scores
-    return letterScores.reduce(add, 0);
+    if (containsOnlyAllowedLetters(word)) {
+	    // split the word into a list of letters
+	    var letters = word.split("");
+	
+	    // TD 19
+	    // Replace the empty list below.
+	    // Map the list of letters into a list of scores, one for each letter.
+	    var letterScores = letters.map(letterScore);
+	
+	    // return the total sum of the letter scores
+	    return letterScores.reduce(add, 0);
+    } else {
+        return 0;
+    }
 }
 
 
@@ -395,7 +393,6 @@ function currentScore() {
     // a list of scores, one for each word submission
     var wordScores = model.wordSubmissions.map(function(submission) {
         if (submission.isRealWord) {
-            // console.log("calling wordScore()...");
             return wordScore(submission.word);
         }
         else {
