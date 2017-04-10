@@ -83,13 +83,18 @@ function checkIfWordIsReal(word) {
             // console.log("We received a response from Pearson!");
 
             // TD 14
-            // Replace the 'true' below.
-            // If the response contains any results, then the word is legitimate.
-            // Otherwise, it is not.
+            // If the response contains any results, then the word is legitimate
+            // Otherwise, it is not
             var validResultsReturned = response.results.length > 0;
 
             // TD 15
-            var currElemIndex = model.wordSubmissions.length-1
+            // Word in Ajax response may not be latest wordSubmission entry
+            var currElemIndex = model.wordSubmissions.findIndex(
+                                            function(elem, index, array) {
+                                                return elem.word === word;
+                                            }
+            );
+
             if (validResultsReturned) {
                 model.wordSubmissions[currElemIndex].isRealWord = true;
             } else {
@@ -211,6 +216,7 @@ function wordSubmissionChip(wordSubmission) {
     // if we know the status of this word (real word or not), then add a green score or red X
     if (wordSubmission.hasOwnProperty("isRealWord")) {
         var scoreChip = $("<span></span>").text("⟐");
+        // assignmt says use green (tag-success), but demo uses blue (-primary)
         var tag_styles = "tag tag-sm tag-primary";
 
         // TD 17
@@ -278,6 +284,8 @@ $(document).ready(function() {
         // we don't want the page to refresh
         evt.preventDefault();
 
+        // FIXME:  ignore single-character entries (in English) except 'a'?
+        //         (but dictionary seems to treat all letters as "letter names")
         if (containsOnlyAllowedLetters($("#textbox").val())) {
             // add a new word from whatever they typed
             addNewWordSubmission(model.currentAttempt);
